@@ -2,13 +2,11 @@ import time
 import os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-from .error_handler import is_error_line
 
 
 class ErrorFileHandler(FileSystemEventHandler):
-    def __init__(self, filepath, on_error_callback):
+    def __init__(self, filepath):
         self.filepath = filepath
-        self.on_error_callback = on_error_callback
         self._last_position = 0
 
     def on_modified(self, event):
@@ -23,13 +21,11 @@ class ErrorFileHandler(FileSystemEventHandler):
             self._last_position = f.tell()
 
         for line in new_lines:
-            if is_error_line(line):
-                print("✅ Error detected!")
-                self.on_error_callback(line.strip())
+            print(f"🆕 New line: {line.strip()}")
 
 
-def start_watching(error_file_path, on_error_callback):
-    event_handler = ErrorFileHandler(error_file_path, on_error_callback)
+def start_watching(error_file_path):
+    event_handler = ErrorFileHandler(error_file_path)
     observer = Observer()
     observer.schedule(event_handler, path=os.path.dirname(error_file_path), recursive=False)
     observer.start()

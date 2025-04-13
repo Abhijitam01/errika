@@ -1,0 +1,4 @@
+NameError: name 'x' is not defined
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+TypeError: unsupported operand type(s) for +: 'int' and 'str'

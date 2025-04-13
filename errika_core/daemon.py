@@ -1,16 +1,27 @@
-import os 
+import os
 from .watcher import start_watching
+from .llm_client import simplify_error
 
-def handle_error(error_line : str):
-    print("\n New error detected:")
+
+def handle_error(error_line):
+    print("\n🚨 New Error Detected:")
     print(error_line)
-    # Here you can add your custom error handling logic
+    print("💡 Asking OpenAI for help...\n")
+    simplified = simplify_error(error_line)
+    print("🧠 Simplified Error:")
+    print(simplified)
+    print("\n" + "="*50 + "\n")
+
 
 def run_daemon():
-    # Get the path to the error log file
-    error_log_path = os.path.abspath(os.path.dirname("sample_error_log.txt"))
-    
+    error_log_path = os.path.abspath("sample_error.log")
+
     if not os.path.exists(error_log_path):
-        print(f"Error log file {error_log_path} does not exist. Creating it ...")
-        open(error_log_path, 'w').close()
-    start_watching(error_log_path , handle_error)
+        print("📁 Creating sample_error.log...")
+        open(error_log_path, "w").close()
+
+    start_watching(error_log_path, handle_error)
+
+
+if __name__ == "__main__":
+    run_daemon()

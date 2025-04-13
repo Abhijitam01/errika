@@ -1,9 +1,12 @@
 import os
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 
+# Load environment variables from .env
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# Create OpenAI client using the new SDK style
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 PROMPT_TEMPLATE = """
 You are an assistant that simplifies technical error messages for developers.
@@ -16,19 +19,21 @@ Here is the error:
 ```{error}```
 """
 
-def simlify_error(error_message : str) -> str:
-    prompt = PROMPT_TEMPLATE.format(error=error_message)
-
+def simplify_error(error_text: str) -> str:
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant for debugging."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that simplifies Python and terminal errors and gives suggestions to fix them.",
+                },
+                {
+                    "role": "user",
+                    "content": PROMPT_TEMPLATE.format(error=error_text),
+                },
             ],
-            temperature=0.3
         )
-        return response['choices'][0]['message']['content'].strip()
-
+        return response.choices[0].message.content.strip()
     except Exception as e:
-        return f"❌ Failed to get LLM response: {str(e)}"
+        return f"❌ Failed to get LLM response: {e}"
