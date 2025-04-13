@@ -1,4 +1,20 @@
-dotenv
-errika_test
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+
+# Local dev/test files
 .env
-node_modules
+.errika_log
+errika_test/
+sample_error.log
+
+# Node.js stuff (if you add a frontend later)
+node_modules/
+
+# dotenv files (just in case)
+.env.*
+*.env
+
+# VS Code settings (optional)
+.vscode/
