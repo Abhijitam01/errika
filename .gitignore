@@ -1,2 +1,4 @@
 dotenv
 errika_test
+.env
+node_modules
